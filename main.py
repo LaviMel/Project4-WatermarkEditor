@@ -8,7 +8,8 @@ def update_tk_img(img):
     img_tk = ImageTk.PhotoImage(img)
     screen.img_tk = img_tk
     canvas.create_image(300, 300, image=img_tk, anchor=CENTER)
-    canvas.grid(row=1, column=1, columnspan=2)
+    canvas.grid(row=1, column=1, columnspan=2, rowspan=2)
+    add_text_button.grid(row=1, column=0)
 
 
 def save_img():
@@ -27,7 +28,7 @@ def add_text():
     font = ImageFont.load_default()
     d.text((0, 0), screen.user_text, font=font, fill=(255, 255, 255, 128))
     update_tk_img(img)
-    save_img_button.grid(row=2, column=0, pady=20)
+    save_image_button.grid(row=1, column=0, pady=(110, 0))
 
 
 def get_text_input():
@@ -65,27 +66,28 @@ def browse_file():
         img = img.resize((new_width, new_height), Image.LANCZOS)
         screen.original_img = img
         update_tk_img(img)
-        add_text_button.grid(row=1, column=0)
 
 
 # Create the main window
 screen = Tk()
 screen.title("Photo Watermark Editor")
-screen.config(height=900, width=1600, padx=20, pady=20)
-
-# Create a 'Browse' button
-browse_button = Button(text="Browse", command=browse_file)
-browse_button.grid(row=2, column=1)
+screen.config(height=900, width=1600, padx=20, pady=20, bg="#8C8C8C")
 
 # Create a canvas to display the photo on
-canvas = Canvas(height=600, width=600)
+canvas = Canvas(screen, height=600, width=600, bg="#8C8C8C", highlightbackground="#8C8C8C", highlightcolor="#8C8C8C")
 default_img = ImageTk.PhotoImage(file="default-img.png")
 canvas.create_image(300, 300, image=default_img)
-canvas.grid(row=1, column=0, columnspan=3, padx=20, pady=20)
+canvas.grid(row=1, column=1, columnspan=2, padx=20, pady=20)
 
-# Create an add text button
-add_text_button = Button(text="Add Text", command=get_text_input)
-save_img_button = Button(text="Save Image", command=save_img)
+# Create buttons with improved design
+browse_button = Button(screen, text="Browse", command=browse_file, font=("Helvetica", 12, "bold"), width=15, height=2, borderwidth=1, relief="solid")
+browse_button.grid(row=5, column=1, columnspan=2, pady=20)
+add_text_button = Button(screen, text="Add Text", command=get_text_input, font=("Helvetica", 12), width=17, height=2, borderwidth=1, relief="solid")
+save_image_button = Button(screen, text="Save Image", command=save_img, font=("Helvetica", 12, "bold"), width=15, height=2, borderwidth=1, relief="solid")
 
+# Center the browse button at the bottom of the screen
+screen.grid_rowconfigure(5, weight=1)
+screen.grid_columnconfigure(0, weight=1)
+screen.grid_columnconfigure(2, weight=1)
 
 screen.mainloop()
