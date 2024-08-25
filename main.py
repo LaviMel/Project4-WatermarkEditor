@@ -35,17 +35,29 @@ def get_text_input():
     # Create a new Toplevel window
     text_window = Toplevel(screen)
     text_window.title("Enter Text")
-    # Create an Entry widget to accept user input
-    Label(text_window, text="Enter the text to add:").grid(row=0, column=0, padx=10, pady=10)
-    text_entry = Entry(text_window, width=30)
-    text_entry.grid(row=1, column=0, padx=10, pady=10)
+    text_window.config(bg="#D3D3D3")
+    text_window.geometry(f"{400}x{400}")
+    # Calculate the position to center the window
+    screen_width = screen.winfo_screenwidth()
+    screen_height = screen.winfo_screenheight()
+    text_window.geometry(f"+{int(screen_width / 2 - 400 / 2)}+{int(screen_height / 2 - 400 / 2)}")
+    # Add widgets to the Toplevel window
+    Label(text_window, text="Enter the text to add:", bg="#D3D3D3", font=("Helvetica", 11, "underline")).pack(pady=10)
+    text_entry = Entry(text_window, width=35)
+    text_entry.pack()
+    img = Image.open("letters.png")
+    img = img.resize((240, 220), Image.LANCZOS)  # Resize the image if needed
+    img_tk = ImageTk.PhotoImage(img)
+    image_label = Label(text_window, image=img_tk, bg="#D3D3D3")
+    image_label.image = img_tk  # Keep a reference to the image
+    image_label.pack(side=BOTTOM, pady=35)
     # Function to save the entered text and close the window
     def save_text():
         screen.user_text = text_entry.get()
         text_window.destroy()
         add_text()
 
-    Button(text_window, text="Add Text", command=save_text).grid(row=2, column=0, padx=10, pady=10)
+    Button(text_window, text="Add Text", command=save_text).pack(pady=10)
 
 
 def browse_file():
@@ -72,6 +84,8 @@ def browse_file():
 screen = Tk()
 screen.title("Photo Watermark Editor")
 screen.config(height=900, width=1600, padx=20, pady=20, bg="#8C8C8C")
+icon_img = ImageTk.PhotoImage(file="brush.png")
+screen.iconphoto(False, icon_img)
 
 # Create a canvas to display the photo on
 canvas = Canvas(screen, height=600, width=600, bg="#8C8C8C", highlightbackground="#8C8C8C", highlightcolor="#8C8C8C")
@@ -82,8 +96,8 @@ canvas.grid(row=1, column=1, columnspan=2, padx=20, pady=20)
 # Create buttons with improved design
 browse_button = Button(screen, text="Browse", command=browse_file, font=("Helvetica", 12, "bold"), width=15, height=2, borderwidth=1, relief="solid")
 browse_button.grid(row=5, column=1, columnspan=2, pady=20)
-add_text_button = Button(screen, text="Add Text", command=get_text_input, font=("Helvetica", 12), width=17, height=2, borderwidth=1, relief="solid")
-save_image_button = Button(screen, text="Save Image", command=save_img, font=("Helvetica", 12, "bold"), width=15, height=2, borderwidth=1, relief="solid")
+add_text_button = Button(screen, text="Add Text", command=get_text_input, font=("Arial", 12), width=17, height=2, borderwidth=1, relief="solid")
+save_image_button = Button(screen, text="Save Image", command=save_img, font=("Arial", 12, "bold"), width=15, height=2, borderwidth=1, relief="solid")
 
 # Center the browse button at the bottom of the screen
 screen.grid_rowconfigure(5, weight=1)
